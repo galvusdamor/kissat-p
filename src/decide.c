@@ -71,7 +71,13 @@ kissat_set_external_decision_function(int (*function) (kissat *, int*)){
 }
 
 int kissat_get_truth_of_external_var(kissat * solver, int external_var){
-	if (external_var <= 0) return 2; // error
+	bool invert = false;
+	if (external_var <= 0) {
+		invert = true;
+		external_var *= -1;
+	}
+
+	if (external_var == 0) return 2; // error
 	if (external_var >= SIZE_STACK (solver->import)) return 2; // error
 	const import *const import = &PEEK_STACK (solver->import, external_var);
 	if (!import->imported) return 2; // error
