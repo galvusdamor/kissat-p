@@ -68,6 +68,7 @@ int (*kissat_external_decision) (kissat *, int*) = 0;
 void
 kissat_set_external_decision_function(int (*function) (kissat *, int*)){
 	kissat_external_decision = function;
+	printf("Setting Solver\n");
 }
 
 int kissat_get_truth_of_external_var(kissat * solver, int external_var){
@@ -113,21 +114,24 @@ kissat_next_decision_variable (kissat * solver)
   if (kissat_external_decision != 0){
 	int made_decision;
   	int chosen_var = kissat_external_decision(solver, &made_decision);
-
+	//printf("External: %d %d\n", chosen_var, made_decision);
 	// if the external procedure has made a suggestion that is valid, take it
 	if (made_decision){
 		int internal_var = kissat_internal_from_external_var(solver,ABS(chosen_var));
 		if (internal_var >= 0){
-			//printf("Taking external advice %d from %d\n", internal_var, chosen_var);
 			
 			if (chosen_var < 0)
 				kissat_phase_advice = -1;
 			else
 				kissat_phase_advice = 1;
 			
+			//printf("Taking external advice %d from %d phasing: %d\n", internal_var, chosen_var, kissat_phase_advice);
+			
 			if (VALUE(internal_var)) printf("ERROR\n", internal_var, chosen_var);
 
 			return IDX(internal_var);
+		} else {
+			printf("External solver gave problematic variable: %d reason: %d\n", ABS(chosen_var), internal_var);	
 		}
 	}
 	// otherwise, we default to kissat's own heuristic
@@ -138,6 +142,7 @@ kissat_next_decision_variable (kissat * solver)
   else
     res = last_enqueued_unassigned_variable (solver);
 
+  //printf("VSIDS decision %d\n", res);
   LOG ("next decision %s", LOGVAR (res));
 
   return res;
@@ -193,7 +198,7 @@ decide_phase (kissat * solver, unsigned idx)
       INC (initial_decisions);
     }
   assert (res);
-
+  //printf("Trying %d\n",res);
   return res;
 }
 
