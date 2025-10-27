@@ -555,6 +555,13 @@ kissat_set_terminate (kissat * solver, void *state, int (*terminate) (void *))
   solver->termination.terminate = terminate;
 }
 
+void
+kissat_set_external_scheduler(kissat * solver, bool (*scheduler) (void *))
+{
+	solver->scheduler_callback = scheduler;
+}
+
+
 int
 kissat_value (kissat * solver, int elit)
 {

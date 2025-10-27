@@ -248,6 +248,8 @@ struct kissat
 #ifndef NPROOFS
   proof *proof;
 #endif
+
+  bool (*scheduler_callback) (void *);
 };
 
 #define VARS (solver->vars)

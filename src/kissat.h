@@ -15,6 +15,8 @@ void kissat_release (kissat * solver);
 void kissat_set_terminate (kissat * solver,
 			   void *state, int (*terminate) (void *state));
 
+void kissat_set_external_scheduler(kissat * solver, bool (*scheduler) (void *));
+
 // Additional API functions.
 
 void kissat_terminate (kissat * solver);
