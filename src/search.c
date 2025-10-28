@@ -165,8 +165,10 @@ kissat_search (kissat * solver)
   while (!res)
     {
 	  if (solver->scheduler_callback != 0)
-		  if (solver->scheduler_callback(solver))
-			kissat_terminate(solver); // if the scheduler told us to terminate, we will immediately
+		  if (solver->scheduler_callback(solver)){
+			kissat_terminate(solver);
+			break; // if the scheduler told us to terminate, we will immediately
+		  }
 
 
       clause *conflict = kissat_search_propagate (solver);
